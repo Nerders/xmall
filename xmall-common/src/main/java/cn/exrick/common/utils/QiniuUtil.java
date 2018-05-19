@@ -1,5 +1,6 @@
 package cn.exrick.common.utils;
 
+import cn.exrick.common.exception.XmallUploadException;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -68,13 +69,11 @@ public class QiniuUtil {
             Response r = ex.response;
             log.warn(r.toString());
             try {
-                log.warn(r.bodyString());
                 return r.bodyString();
-            } catch (QiniuException ex2) {
-                //ignore
+            } catch (QiniuException e) {
+                throw new XmallUploadException(e.toString());
             }
         }
-        return null;
     }
 
     /**
@@ -102,15 +101,12 @@ public class QiniuUtil {
             Response r = ex.response;
             log.warn(r.toString());
             try {
-                log.warn(r.bodyString());
                 return r.bodyString();
-            } catch (QiniuException ex2) {
-                //ignore
+            } catch (QiniuException e) {
+                throw new XmallUploadException(e.toString());
             }
         }
-        return null;
     }
-
 
     public static String qiniuBase64Upload(String data64){
 
@@ -125,7 +121,6 @@ public class QiniuUtil {
                 addHeader("Content-Type", "application/octet-stream")
                 .addHeader("Authorization", "UpToken " + getUpToken())
                 .post(rb).build();
-        System.out.println(request.headers());
         OkHttpClient client = new OkHttpClient();
         okhttp3.Response response = null;
         try {
@@ -133,7 +128,6 @@ public class QiniuUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(response);
         return origin+key;
     }
 
